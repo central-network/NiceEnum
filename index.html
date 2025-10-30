@@ -1,0 +1,45 @@
+<meta charset="utf8" />
+<script type="module">
+    import enumerate from "./index.js"
+
+    enumerate.iterate = 100;
+
+
+    const ERROR_SOURCE_TARGET = enumerate("ERROR_SOURCE_TARGET");
+    const CONST = [
+        ERROR_SOURCE_TARGET,
+        enumerate("TYPEOF_OPERATION_DATA_FLOAT"),
+        enumerate("ARRAY_BUFFER", WebGLRenderingContext.ARRAY_BUFFER),
+    ];
+
+
+    console.group("table( [...enums] )")
+    console.table( CONST.map(c => Object({
+        name : c.toString(),
+        value : c.valueOf(),
+        enum : c
+    })) )
+
+    
+    console.log("\n".repeat(3))
+    console.group("warn( enum )")
+    CONST.forEach(e => console.warn(e))
+    console.groupEnd()
+
+    
+    console.log("\n".repeat(3))
+    console.group("error( enum )")
+    console.error(ERROR_SOURCE_TARGET)
+    console.error(CONST.at(1))
+    console.error(CONST.at(2))
+    console.groupEnd()
+
+    
+    console.log("\n".repeat(3))
+    console.group("\x1b[36menumerate.valueOf\x1b[0m( \x1b[33mvalue\x1b[0m / \x1b[34mlabel\x1b[0m / \x1b[32menum\x1b[0m ):")
+    console.log(`\x1b[33m${"100".padStart(40)}\x1b[0m`, "->", enumerate.valueOf(100))
+    console.log(`\x1b[34m${"ARRAY_BUFFER".padStart(40)}\x1b[0m`, "->", enumerate.valueOf(WebGL2RenderingContext.ARRAY_BUFFER))
+    console.log(`\x1b[32m${"ERROR_SOURCE_TARGET {100}".padStart(40)}\x1b[0m`, "->", enumerate.valueOf(ERROR_SOURCE_TARGET))
+    console.groupEnd()
+
+</script>
