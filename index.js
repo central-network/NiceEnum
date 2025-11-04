@@ -51,6 +51,14 @@ function enumerate ( name = `UNDEFINED`, value ) {
     return object;
 }
 
+const definitions = {
+    is : { value : function ( value ) { return value - this === 0; } },
+    not : { value : function ( value ) { return value - this !== 0; } },
+};
+
+Object.defineProperties(Number.prototype, definitions);
+Object.defineProperties(BigInt.prototype, definitions);
+
 Object.defineProperty(enumerate, "iterate", { value: false, writable: true });
 Object.defineProperty(enumerate, "valueOf", { value: Map.prototype.get.bind(enums) });
 
