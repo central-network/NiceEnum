@@ -8,20 +8,23 @@ Object.defineProperty(Enum.prototype, Symbol.toPrimitive, {value: function (hint
 }});
 
 const enums = new Map()
+const caches = new Array();
 
-function enumerate ( name = `UNDEFINED`, value ) {
-    if (enums.has(name)) { return enums.get(name) };
-    if (enums.has(value)) {
-        const ref = enums.get(value);
-        
-        if (ref.toString() === name) {
-            return ref;
-        }
-
-        throw new ReferenceError(
-            `Enum value of ${value} used for ${ref} {${value}}`
-        );
-    };
+function enumerate ( name = `UNDEFINED`, value, cache = enums ) {
+    if (cache instanceof Map) {
+        if (cache.has(name)) { return cache.get(name) };
+        if (cache.has(value)) {
+            const ref = cache.get(value);
+            
+            if (ref.toString() === name) {
+                return ref;
+            }
+    
+            throw new ReferenceError(
+                `Enum value of ${value} used for ${ref} {${value}}`
+            );
+        };
+    }
 
     if (typeof value !== "number") {
         if (typeof enumerate.iterate === "number") {
@@ -44,9 +47,15 @@ function enumerate ( name = `UNDEFINED`, value ) {
     Object.defineProperty(constructor, "name", {value: name});     
     Object.defineProperty(prototype, Symbol.toStringTag, {value: name });     
 
-    enums.set(value, object);
-    enums.set(name, object);
-    enums.set(object, value);
+    if (cache instanceof Map) {
+        cache.set(value, object);
+        cache.set(name, object);
+        cache.set(object, object);
+
+        if (caches.includes(cache) === false) {
+            caches.push(cache);
+        }
+    }
 
     return object;
 }
@@ -59,7 +68,16 @@ const definitions = {
 Object.defineProperties(Number.prototype, definitions);
 Object.defineProperties(BigInt.prototype, definitions);
 
-Object.defineProperty(enumerate, "iterate", { value: false, writable: true });
-Object.defineProperty(enumerate, "valueOf", { value: Map.prototype.get.bind(enums) });
+Object.defineProperty(enumerate, "iterate",  { value: false, writable: true });
+Object.defineProperty(enumerate, "valueOf",  { value: function ( any ) {
+    return caches.find(cache => cache.has(any))?.get(any)
+} });
+Object.defineProperty(enumerate, "defineProperty", { value: function ( name, value, Class) {
+    const cache = new Map();
+    const value = enumerate(name, value, cache);
+    Object.defineProperty(Class, name, { value: value });
+    Object.defineProperty(Class.prototype, name, { value: value });
+    return value;
+} });
 
 export default enumerate;
