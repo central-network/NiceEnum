@@ -1,10 +1,9 @@
 class Enum extends Number {}
 
-
 Object.defineProperty(Enum.prototype, "toString", {value: function (){ return this.constructor.name }})     
 Object.defineProperty(Enum.prototype, "valueOf", {value: function (){ return this.constructor.value }})     
 Object.defineProperty(Enum.prototype, Symbol.toPrimitive, {value: function (hint){
-    return (hint === "number") && this.valueOf() || this.toString();
+    return (hint === "number") && this.value || this.label;
 }});
 
 const enums = new Map()
@@ -46,16 +45,19 @@ function enumerate ( name = `UNDEFINED`, value, cache = enums ) {
     Object.defineProperty(constructor, "value", {value: value});     
     Object.defineProperty(constructor, "name", {value: name});     
     Object.defineProperty(prototype, Symbol.toStringTag, {value: name });     
-
+    
     if (cache instanceof Map) {
         cache.set(value, object);
         cache.set(name, object);
         cache.set(object, object);
-
+        
         if (caches.includes(cache) === false) {
             caches.push(cache);
         }
     }
+
+    Object.defineProperty(object, "value", {value: value});     
+    Object.defineProperty(object, "label", {value: name});     
 
     return object;
 }
