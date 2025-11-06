@@ -72,7 +72,8 @@ Object.defineProperty(enumerate, "iterate",  { value: false, writable: true });
 Object.defineProperty(enumerate, "valueOf",  { value: function ( any ) {
     return caches.find(cache => cache.has(any))?.get(any)
 } });
-Object.defineProperty(enumerate, "defineProperty", { value: function ( name, value, Class) {
+
+Object.defineProperty(enumerate, "for", { value: function ( name, value, Class) {
     const cache = new Map();
     const value = enumerate(name, value, cache);
     Object.defineProperty(Class, name, { value: value });

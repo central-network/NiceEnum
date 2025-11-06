@@ -1,6 +1,6 @@
 {
   "name": "niceenum",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "<p align=\"center\">   <br />   <strong><code>Beautiful, Descriptive, and Safe Enums</code></strong>   <br />   A micro-library that gives numbers a name and an identity, turning them into self-descriptive primitives that are a joy to debug and use. </p>",
   "homepage": "https://github.com/central-network/NiceEnum#readme",
   "bugs": {
