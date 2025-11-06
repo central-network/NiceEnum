@@ -73,12 +73,12 @@ Object.defineProperty(enumerate, "valueOf",  { value: function ( any ) {
     return caches.find(cache => cache.has(any))?.get(any)
 } });
 
-Object.defineProperty(enumerate, "for", { value: function ( name, value, Class) {
+Object.defineProperty(enumerate, "on", { value: function ( constructor, name, value) {
     const cache = new Map();
-    const value = enumerate(name, value, cache);
-    Object.defineProperty(Class, name, { value: value });
-    Object.defineProperty(Class.prototype, name, { value: value });
-    return value;
+    const nenum = enumerate(name, value, cache);
+    Object.defineProperty(constructor, name, { value: nenum });
+    Object.defineProperty(constructor.prototype, name, { value: nenum });
+    return nenum;
 } });
 
 export default enumerate;
