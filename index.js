@@ -3,7 +3,7 @@ class Enum extends Number {}
 Object.defineProperty(Enum.prototype, "toString", {value: function (){ return this.constructor.name }})     
 Object.defineProperty(Enum.prototype, "valueOf", {value: function (){ return this.constructor.value }})     
 Object.defineProperty(Enum.prototype, Symbol.toPrimitive, {value: function (hint){
-    return (hint === "number") && this.value || this.label;
+    return (hint === "string") && this.toString() || this.valueOf();
 }});
 
 const enums = new Map()
@@ -55,9 +55,6 @@ function enumerate ( name = `UNDEFINED`, value, cache = enums ) {
             caches.push(cache);
         }
     }
-
-    Object.defineProperty(object, "value", {value: value});     
-    Object.defineProperty(object, "label", {value: name});     
 
     return object;
 }
