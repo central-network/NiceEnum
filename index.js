@@ -63,6 +63,7 @@ function enumerate ( name = `UNDEFINED`, value, cache = enums ) {
 const definitions = {
     is : { value : function ( value ) { return value - this === 0; } },
     not : { value : function ( value ) { return value - this !== 0; } },
+    nice : { value : function () { return enumerate.valueOf( this ); } }
 };
 
 Object.defineProperties(Number.prototype, definitions);
@@ -73,11 +74,10 @@ Object.defineProperty(enumerate, "valueOf",  { value: function ( any ) {
     return caches.find(cache => cache.has(any))?.get(any)
 } });
 
-Object.defineProperty(enumerate, "on", { value: function ( constructor, name, value) {
+Object.defineProperty(enumerate, "on", { value: function ( thisArg, name, value) {
     const cache = new Map();
     const nenum = enumerate(name, value, cache);
-    Object.defineProperty(constructor, name, { value: nenum });
-    Object.defineProperty(constructor.prototype, name, { value: nenum });
+    Object.defineProperty(thisArg, name, { value: nenum });
     return nenum;
 } });
 
